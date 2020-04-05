@@ -15,12 +15,12 @@ class Task(models.Model):
 	deadline = models.DateTimeField(blank = True, null = True)
 	finished_at = models.DateTimeField(blank = True, null = True)
 	status = models.CharField(max_length = 20, blank = True, null = True)
-	created_by = models.ForeignKey(User, blank = True, null = True)
-	shared_with = models.ForeignKey(User, blank = True, null = True)
+	created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'user_create')
+	shared_with = models.ForeignKey(User, blank = True, null = True, related_name = 'user_share')
 
 class Healthlog(models.Model):
 	title = models.CharField(max_length = 255, blank = True, null = True)
 	detail = models.CharField(max_length = 255, blank = True, null = True)
 	created_at = models.DateTimeField(blank = True, null = True)
-	created_by = models.ForeignKey(User, blank = True, null = True)
-	shared_with = models.ForeignKey(User, blank = True, null = True)
+	created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'user_create')
+	shared_with = models.ForeignKey(User, blank = True, null = True, related_name = 'user_share')
