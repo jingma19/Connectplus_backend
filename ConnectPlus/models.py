@@ -13,8 +13,8 @@ class Userinfo(models.Model):
 class Task(models.Model):
 	title = models.CharField(max_length = 255, blank = True, null = True)
 	detail = models.CharField(max_length = 1000, blank = True, null = True)
-	created_at = models.DateTimeField(blank = True, null = True)
-	deadline = models.DateTimeField(blank = True, null = True)
+	created_at = models.DateField(blank = True, null = True)
+	deadline = models.DateField(blank = True, null = True)
 	finished_at = models.DateTimeField(blank = True, null = True)
 	status = models.CharField(max_length = 20, blank = True, null = True)
 	created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'user_create')
