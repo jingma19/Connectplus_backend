@@ -6,6 +6,7 @@ class User(models.Model):
 	email = models.CharField(max_length = 255, blank = True, null = True)
 	role = models.CharField(max_length = 255, blank = True, null = True)
 	pair = models.ForeignKey('self', blank = True, null = True)
+	start_date = models.DateField(blank = True, null = True)
 
 
 class Task(models.Model):
