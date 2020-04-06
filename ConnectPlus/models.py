@@ -38,6 +38,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     partner_name = models.CharField(max_length=100, blank=True, null = True)
     login_method = models.CharField(max_length = 255, blank = True, null = True)
     start_date = models.DateField(blank = True, null = True)
+    facebook_id = models.CharField(max_length=200, unique=True, blank=True, null=True)
 
     objects = UserManager()
 
