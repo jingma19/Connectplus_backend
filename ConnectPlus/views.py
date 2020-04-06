@@ -3,6 +3,7 @@ from rest_framework import views, status
 from rest_framework.response import Response
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 import facebook
 from rest_framework.authtoken.models import Token
 import json
@@ -48,3 +49,7 @@ def login_fb_action(request):
     else:
         return JsonResponse({'error': 'Invalid data'}, safe=False)
 
+@csrf_exempt
+@login_required
+def task_action(request):
+    return
