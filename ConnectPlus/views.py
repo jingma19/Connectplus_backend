@@ -53,3 +53,35 @@ def login_fb_action(request):
 @login_required
 def task_action(request):
     return
+
+@csrf_exempt
+@login_required
+def add_task_action(request):
+    return
+
+@csrf_exempt
+@login_required
+def complete_task_action(request):
+    return
+
+@csrf_exempt
+@login_required
+def send_appreciation_action(request):
+    return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
