@@ -35,7 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'unique': ("A user with that username already exists."),
         })
     role = models.CharField(max_length=10, blank=True)
-    partner = models.ForeignKey('self', blank = True, null = True, related_name='partner')
+    partner_name = models.CharField(max_length=100, blank=True, null = True)
     login_method = models.CharField(max_length = 255, blank = True, null = True)
     start_date = models.DateField(blank = True, null = True)
 
@@ -69,12 +69,12 @@ class Task(models.Model):
     deadline = models.DateField(blank = True, null = True)
     finished_at = models.DateTimeField(blank = True, null = True)
     status = models.CharField(max_length = 20, blank = True, null = True)
-    created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'user_create')
-    shared_with = models.ForeignKey(User, blank = True, null = True, related_name = 'user_share')
+    created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'task_user_create', on_delete=models.CASCADE)
+    shared_with = models.ForeignKey(User, blank = True, null = True, related_name = 'task_user_share', on_delete=models.CASCADE)
 
 class Healthlog(models.Model):
     title = models.CharField(max_length = 255, blank = True, null = True)
     detail = models.CharField(max_length = 255, blank = True, null = True)
     created_at = models.DateTimeField(blank = True, null = True)
-    created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'user_create')
-    shared_with = models.ForeignKey(User, blank = True, null = True, related_name = 'user_share')
+    created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'log_user_create', on_delete=models.CASCADE)
+    shared_with = models.ForeignKey(User, blank = True, null = True, related_name = 'log_user_share', on_delete=models.CASCADE)
