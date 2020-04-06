@@ -1,11 +1,11 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class Userinfo(models.Model):
 	login_method = models.CharField(max_length = 255, blank = True, null = True)
 	email = models.CharField(max_length = 255, blank = True, null = True)
 	role = models.CharField(max_length = 255, blank = True, null = True)
-	pair = models.ForeignKey('self', blank = True, null = True)
+	pair = models.ForeignKey(User, blank = True, null = True)
 	start_date = models.DateField(blank = True, null = True)
 	username = models.CharField(max_length = 255, blank = True, null = True)
 
