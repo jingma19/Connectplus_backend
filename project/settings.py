@@ -90,6 +90,7 @@ REST_FRAMEWORK = {
 FACEBOOK_APP_ID = '1246553912210604'
 FACEBOOK_APP_SECRET = 'de9a8119d69348388ba2e6f3f9ca7e3f'
 
+AUTH_USER_MODEL = "ConnectPlus.User"
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
