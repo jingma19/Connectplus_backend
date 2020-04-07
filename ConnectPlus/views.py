@@ -15,22 +15,29 @@ from django.db.models import Q
 
 @csrf_exempt
 def login_fb_action(request):
-    data = json.loads(request.body.decode('utf-8'))
-    access_token = data.get('accessToken')
-    new_user = False
+    print("get request from fb login")
+    #data = json.loads(request.body.decode('utf-8'))
+    access_token = request.GET['accessToken']
+    print("accessToken is ")
+    print(access_token)
+    new_user = 'False'
     try:
+        print("first try")
         graph = facebook.GraphAPI(access_token=access_token)
         user_info = graph.get_object(
             id='me',
             fields='email, id'
             )
     except facebook.GraphAPIError:
+        print("first except")
         return JsonResponse({'error': 'Invalid data'}, safe=False)
 
     try:
+        print("second try")
         user = User.objects.get(facebook_id=user_info.get('id'))
 
     except User.DoesNotExist:
+        print("second except")
         password = User.objects.make_random_password()
         user = User(
             email=user_info.get('email')
@@ -41,10 +48,11 @@ def login_fb_action(request):
             )
         user.set_password(password)
         user.save()
-        new_user = True
+        new_user = 'True'
     token = Token.objects.get(user=user).key
     if token:
-        return JsonResponse({'new_user': new_user},
+        print(new_user)
+        return JsonResponse({'answer': new_user},
                             safe=False)
     else:
         return JsonResponse({'error': 'Invalid data'}, safe=False)
