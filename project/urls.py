@@ -20,4 +20,5 @@ from ConnectPlus import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login_fb', views.login_fb_action, name='login_fb'),
+    path('add_task', views.add_task_action, name='add_task'),
 ]

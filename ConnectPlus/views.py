@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 import facebook
 from rest_framework.authtoken.models import Token
 import json
+import datetime
 
 from ConnectPlus.models import *
 from ConnectPlus.serializers import *
@@ -34,6 +35,7 @@ def login_fb_action(request):
 
     try:
         print("second try")
+        print(user_info.get('id'))
         user = User.objects.get(facebook_id=user_info.get('id'))
 
     except User.DoesNotExist:
@@ -50,9 +52,11 @@ def login_fb_action(request):
         user.save()
         new_user = 'True'
     token = Token.objects.get(user=user).key
+
     if token:
         print(new_user)
-        return JsonResponse({'answer': new_user},
+        un = 'Facebook_'+user_info.get('id')
+        return JsonResponse({'answer': new_user, 'username':un},
                             safe=False)
     else:
         return JsonResponse({'error': 'Invalid data'}, safe=False)
@@ -62,10 +66,43 @@ def login_fb_action(request):
 def task_action(request):
     return
 
+
+
+
 @csrf_exempt
 @login_required
 def add_task_action(request):
-    return
+    username = request.POST['username']
+    deadline = request.POST['deadline']
+    title = request.POST['title']
+    detail = request.POST['detail']
+
+    if not username:
+        return JsonResponse({'success': 'False', 'message': 'Missing username.'}, safe=False)
+
+    if not deadline:
+        return JsonResponse({'success': 'False', 'message': 'Missing deadline.'}, safe=False)
+    if not title:
+        return JsonResponse({'success': 'False', 'message': 'Missing task title.'}, safe=False)
+    if not detail:
+        detail = "None"
+    elif len(detail) > 1000:
+        return JsonResponse({'success': 'False', 'message': 'Maximum characters for detail is 1000.'}, safe=False)
+
+    user = User.objects.get(username=username)
+    if not user:
+        return JsonResponse({'success': 'False', 'message': 'Invalid username'}, safe=False)
+
+    new_task = Task(title=title,
+                    detail=detail,
+                    created_at=datetime.date.today,
+                    deadline=datetime.datetime.strptime(deadline, "%Y-%m-%d").date(),
+                    status='incompleted',
+                    created_by=user,
+                    shared_with=User.objects.get(username=user.partner_name),
+        )
+    new_task.save()
+    return JsonResponse({'success': 'True', 'message': 'Task saved successfully.'}, safe=False)
 
 @csrf_exempt
 @login_required
