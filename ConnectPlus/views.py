@@ -62,7 +62,6 @@ def login_fb_action(request):
         return JsonResponse({'error': 'Invalid data'}, safe=False)
 
 @csrf_exempt
-@login_required
 def task_action(request):
     return
 
@@ -70,20 +69,37 @@ def task_action(request):
 
 
 @csrf_exempt
-@login_required
 def add_task_action(request):
-    username = request.POST['username']
-    deadline = request.POST['deadline']
-    title = request.POST['title']
-    detail = request.POST['detail']
+    print("Get a POST request to add task")
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    
 
+    print(body)
+    print(body['title'])
+
+    username = body['unique_username']
+    deadline = body['deadline']
+    title = body['title']
+    detail = body['detail']
+
+
+
+
+    print(request.POST)
+    print(request.body)
+
+    if not title:
+        print('missing title')
+        return JsonResponse({'success': 'False', 'message': 'Missing task title.'}, safe=False)
+    
+    
+    if not deadline:
+        return JsonResponse({'success': 'False', 'message': 'Missing deadline.'}, safe=False)
     if not username:
         return JsonResponse({'success': 'False', 'message': 'Missing username.'}, safe=False)
 
-    if not deadline:
-        return JsonResponse({'success': 'False', 'message': 'Missing deadline.'}, safe=False)
-    if not title:
-        return JsonResponse({'success': 'False', 'message': 'Missing task title.'}, safe=False)
+    
     if not detail:
         detail = "None"
     elif len(detail) > 1000:
@@ -102,15 +118,14 @@ def add_task_action(request):
                     shared_with=User.objects.get(username=user.partner_name),
         )
     new_task.save()
+    print("task saved!")
     return JsonResponse({'success': 'True', 'message': 'Task saved successfully.'}, safe=False)
 
 @csrf_exempt
-@login_required
 def complete_task_action(request):
     return
 
 @csrf_exempt
-@login_required
 def send_appreciation_action(request):
     return
 
