@@ -62,6 +62,32 @@ def login_fb_action(request):
         return JsonResponse({'error': 'Invalid data'}, safe=False)
 
 @csrf_exempt
+def get_username_from_token(request):
+    print("getting username")
+    access_token = request.GET['accessToken']
+    try:
+        print("first try")
+        graph = facebook.GraphAPI(access_token=access_token)
+        user_info = graph.get_object(
+            id='me',
+            fields='email, id'
+            )
+    except facebook.GraphAPIError:
+        print("first except")
+        return JsonResponse({'success': 'False', 'username':''}, safe=False)
+
+    try:
+        print("second try")
+        print(user_info.get('id'))
+        user = User.objects.get(facebook_id=user_info.get('id'))
+
+    except User.DoesNotExist:
+        return JsonResponse({'success': 'False', 'username':''}, safe=False)
+
+    return JsonResponse({'success':'True', 'username': user.username}, safe=False)
+
+
+@csrf_exempt
 def task_action(request):
     return
 
@@ -109,15 +135,29 @@ def add_task_action(request):
     if not user:
         return JsonResponse({'success': 'False', 'message': 'Invalid username'}, safe=False)
 
-    new_task = Task(title=title,
+
+    
+    if not user.partner_name:
+        print(datetime.date.today)
+        print(datetime.datetime.strptime(deadline, "%Y-%m-%d").date())
+        new_task = Task(title=title,
                     detail=detail,
-                    created_at=datetime.date.today,
+                    created_at=datetime.date.today(),
+                    deadline=datetime.datetime.strptime(deadline, "%Y-%m-%d").date(),
+                    status='incompleted',
+                    created_by=user,
+        )
+        new_task.save()
+    else:
+        new_task = Task(title=title,
+                    detail=detail,
+                    created_at=datetime.date.today(),
                     deadline=datetime.datetime.strptime(deadline, "%Y-%m-%d").date(),
                     status='incompleted',
                     created_by=user,
                     shared_with=User.objects.get(username=user.partner_name),
         )
-    new_task.save()
+        new_task.save()
     print("task saved!")
     return JsonResponse({'success': 'True', 'message': 'Task saved successfully.'}, safe=False)
 
