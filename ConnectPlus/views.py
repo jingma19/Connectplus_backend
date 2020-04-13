@@ -8,6 +8,7 @@ import facebook
 from rest_framework.authtoken.models import Token
 import json
 import datetime
+from django.core import serializers
 
 from ConnectPlus.models import *
 from ConnectPlus.serializers import *
@@ -89,7 +90,17 @@ def get_username_from_token(request):
 
 @csrf_exempt
 def task_action(request):
-    return
+    # order based on -deadline!
+    username = request.GET[unique_username]
+
+    user = User.objects.get(username=username)
+    if not user:
+        return JsonResponse(status=500, {'error': 'User does not exist'}, safe=False)
+
+    all_tasks = Task.objects.filter(created_by__username__exact=user.username).order_by('-deadline')
+
+    json_tasks = serializers.serialize('json', all_tasks)
+    return JsonResponse(json_tasks, safe=False)
 
 
 
