@@ -95,7 +95,7 @@ def task_action(request):
 
     user = User.objects.get(username=username)
     if not user:
-        return JsonResponse(status=500, {'error': 'User does not exist'}, safe=False)
+        return JsonResponse(status=500, data={'error': 'User does not exist'}, safe=False)
 
     all_tasks = Task.objects.filter(created_by__username__exact=user.username).order_by('-deadline')
 
