@@ -22,4 +22,5 @@ urlpatterns = [
     path('login_fb', views.login_fb_action, name='login_fb'),
     path('add_task', views.add_task_action, name='add_task'),
     path('get_username_from_token', views.get_username_from_token, name='get_username_from_token'),
+    path('get_task', views.task_action, name='get_task'),
 ]
