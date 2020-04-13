@@ -11,7 +11,7 @@ import datetime
 from django.core import serializers
 
 from ConnectPlus.models import *
-from ConnectPlus.serializers import *
+#from ConnectPlus.serializers import *
 from django.db.models import Q
 # Create your views here.
 
@@ -98,8 +98,25 @@ def task_action(request):
         return JsonResponse(status=500, data={'error': 'User does not exist'}, safe=False)
 
     all_tasks = Task.objects.filter(created_by__username__exact=user.username).order_by('-deadline')
-
-    json_tasks = serializers.serialize('json', all_tasks)
+    print(len(all_tasks))
+    #json_tasks = serializers.serialize('json', all_tasks)
+    #print(json_tasks)
+    json_tasks = []
+    for t in all_tasks:
+        json_t = {}
+        json_t['title'] = t.title
+        json_t['detail'] = t.detail
+        json_t['created_at'] = t.created_at.strftime("%Y-%m-%d")
+        json_t['deadline'] = t.created_at.strftime("%Y-%m-%d")
+        
+        if t.finished_at:
+            json_t['finished_at'] = t.finished_at.strftime("%Y-%m-%d %H:%M")
+        else:
+            json_t['finished_at'] = ""
+        json_t['status'] = t.status
+        json_tasks.append(json_t)
+    print(json.dumps(json_tasks))
+    print(json_tasks)
     return JsonResponse(json_tasks, safe=False)
 
 
