@@ -91,7 +91,7 @@ def get_username_from_token(request):
 @csrf_exempt
 def task_action(request):
     # order based on -deadline!
-    username = request.GET[unique_username]
+    username = request.GET['unique_username']
 
     user = User.objects.get(username=username)
     if not user:
