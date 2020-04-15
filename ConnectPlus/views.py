@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 import json
 import datetime
 from django.core import serializers
+from django.utils import timezone
 
 from ConnectPlus.models import *
 #from ConnectPlus.serializers import *
@@ -192,7 +193,13 @@ def add_task_action(request):
 
 @csrf_exempt
 def complete_task_action(request):
-    return
+    id = int(request.GET['id'])
+    tasks = Task.objects.select_for_update().filter(id=id)
+    task = tasks[0]
+    task.status = 'completed'
+    task.finished_at = timezone.now()
+    task.save()
+    return JsonResponse({'success': 'True', 'message': 'Task completed successfully.'}, safe=False)
 
 @csrf_exempt
 def send_appreciation_action(request):
