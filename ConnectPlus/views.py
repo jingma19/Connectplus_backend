@@ -114,6 +114,7 @@ def task_action(request):
         else:
             json_t['finished_at'] = ""
         json_t['status'] = t.status
+        json_t['id'] = str(t.id)
         json_tasks.append(json_t)
     print(json.dumps(json_tasks))
     print(json_tasks)
