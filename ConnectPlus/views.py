@@ -262,6 +262,7 @@ def add_health_action(request):
 @csrf_exempt
 def news_action(request):
     username = request.GET['unique_username']
+    print("username = ", username)
 
     user = User.objects.get(username=username)
     if not user:
@@ -280,7 +281,7 @@ def news_action(request):
         json_n = {}
         json_n['action'] = n.action
         json_n['content'] = n.content
-        json_n['created_at'] = n.created_at
+        json_n['created_at'] = n.created_at.strftime("%Y-%m-%d %H:%M")
         json_n['created_by'] = n.created_by.username
         json_news.append(json_n)
 
