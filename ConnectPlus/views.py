@@ -178,6 +178,12 @@ def add_task_action(request):
                     created_by=user,
         )
         new_task.save()
+        new_news = News(action="added a task",
+                        content=title,
+                        created_at=timezone.now(),
+                        created_by=user,
+                        )
+        new_news.save()
     else:
         new_task = Task(title=title,
                     detail=detail,
@@ -188,7 +194,15 @@ def add_task_action(request):
                     shared_with=User.objects.get(username=user.partner_name),
         )
         new_task.save()
+        new_news = News(action="added a task",
+                        content=title,
+                        created_at=timezone.now(),
+                        created_by=user,
+                        shared_with=User.objects.get(username=user.partner_name),
+                        )
+        new_news.save()
     print("task saved!")
+
     return JsonResponse({'success': 'True', 'message': 'Task saved successfully.'}, safe=False)
 
 @csrf_exempt
@@ -247,6 +261,12 @@ def add_health_action(request):
                             created_by=user,
                             )
         new_log.save()
+        new_news = News(action="added a health log",
+                        content=title,
+                        created_at=timezone.now(),
+                        created_by=user,
+                        )
+        new_news.save()
 
     else:
         new_log = Healthlog(title=title,
@@ -256,6 +276,13 @@ def add_health_action(request):
                             shared_with=User.objects.get(username=user.partner_name),
                             )
         new_log.save()
+        new_news = News(action="added a health log",
+                        content=title,
+                        created_at=timezone.now(),
+                        created_by=user,
+                        shared_with=User.objects.get(username=user.partner_name),
+                        )
+        new_news.save()
     print("health log saved!")
     return JsonResponse({'success': 'True', 'message': 'Health log saved successfully.'}, safe=False)
 
