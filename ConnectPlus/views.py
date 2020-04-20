@@ -205,13 +205,59 @@ def complete_task_action(request):
 def send_appreciation_action(request):
     return
 
+@csrf_exempt
+def health_action(request):
+    username = request.GET['unique_username']
 
+    user = User.objects.get(username=username)
+    if not user:
+        return JsonResponse(status=500, data={'error': 'User does not exist'}, safe=False)
 
+    all_healthlogs = Healthlog.objects.filter(created_by__username__exact=user.username).order_by('-created_at')
+    print(len(all_healthlogs))
 
+    json_logs = []
+    for l in all_healthlogs:
+        json_l = {}
+        json_l['title'] = l.title
+        json_l['detail'] = l.detail
+        json_l['created_at'] = l.created_at.strftime("%Y-%m-%d")
+        json_l['id'] = str(l.id)
+        json_logs.append(json_l)
 
+    return JsonResponse(json_logs, safe=False)
 
+@csrf_exempt
+def add_health_action(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
 
+    username = body['unique_username']
+    title = body['title']
+    detail = body['detail']
 
+    user = User.objects.get(username=username)
+    if not user:
+        return JsonResponse({'success': 'False', 'message': 'Invalid username'}, safe=False)
+
+    if not user.partner_name:
+        new_log = Healthlog(title=title,
+                            detail=detail,
+                            created_at=timezone.now(),
+                            created_by=user,
+                            )
+        new_log.save()
+
+    else:
+        new_log = Healthlog(title=title,
+                            detail=detail,
+                            created_at=timezone.now(),
+                            created_by=user,
+                            shared_with=User.objects.get(username=user.partner_name),
+                            )
+        new_log.save()
+    print("health log saved!")
+    return JsonResponse({'success': 'True', 'message': 'Health log saved successfully.'}, safe=False)
 
 
 

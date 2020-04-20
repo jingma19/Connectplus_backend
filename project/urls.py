@@ -24,4 +24,6 @@ urlpatterns = [
     path('get_username_from_token', views.get_username_from_token, name='get_username_from_token'),
     path('get_task', views.task_action, name='get_task'),
     path('complete_task', views.complete_task_action, name='complete_task'),
+    path('get_health', views.health_action, name='get_health'),
+    path('add_health', views.add_health_action, name='add_health'),
 ]
