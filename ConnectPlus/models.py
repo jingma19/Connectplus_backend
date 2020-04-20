@@ -79,3 +79,9 @@ class Healthlog(models.Model):
     created_at = models.DateTimeField(blank = True, null = True)
     created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'log_user_create', on_delete=models.CASCADE)
     shared_with = models.ForeignKey(User, blank = True, null = True, related_name = 'log_user_share', on_delete=models.CASCADE)
+
+class News(models.Model):
+    content = models.CharField(max_length = 255, blank = True, null = True)
+    created_at = models.DateTimeField(blank = True, null = True)
+    created_by = models.ForeignKey(User, blank = True, null = True, related_name = 'log_user_create', on_delete=models.CASCADE)
+    shared_with = models.ForeignKey(User, blank = True, null = True, related_name = 'log_user_share', on_delete=models.CASCADE)
