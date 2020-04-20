@@ -26,4 +26,5 @@ urlpatterns = [
     path('complete_task', views.complete_task_action, name='complete_task'),
     path('get_health', views.health_action, name='get_health'),
     path('add_health', views.add_health_action, name='add_health'),
+    path('get_news', views.news_action, name='get_news'),
 ]

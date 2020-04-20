@@ -259,7 +259,32 @@ def add_health_action(request):
     print("health log saved!")
     return JsonResponse({'success': 'True', 'message': 'Health log saved successfully.'}, safe=False)
 
+@csrf_exempt
+def news_action(request):
+    username = request.GET['unique_username']
 
+    user = User.objects.get(username=username)
+    if not user:
+        return JsonResponse(status=500, data={'error': 'User does not exist'}, safe=False)
+
+    if not user.partner_name:
+        all_news = News.objects.filter(created_by__username__exact=user.username).order_by('-created_at')
+    else:
+        all_news = News.objects.filter(Q(created_by__username__exact=user.username) | Q(shared_with__username__exact=user.partner_name)).order_by('-created_at')
+    
+    print(len(all_news))
+
+    json_news = []
+
+    for n in all_news:
+        json_n = {}
+        json_n['action'] = n.action
+        json_n['content'] = n.content
+        json_n['created_at'] = n.created_at
+        json_n['created_by'] = n.created_by.username
+        json_news.append(json_n)
+
+    return JsonResponse(json_news, safe=False)
 
 
 
