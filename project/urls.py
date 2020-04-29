@@ -27,4 +27,5 @@ urlpatterns = [
     path('get_health', views.health_action, name='get_health'),
     path('add_health', views.add_health_action, name='add_health'),
     path('get_news', views.news_action, name='get_news'),
+    path('erase_data', views.erase_data_action, name='erase_data'),
 ]

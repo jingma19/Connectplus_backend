@@ -314,8 +314,15 @@ def news_action(request):
 
     return JsonResponse(json_news, safe=False)
 
+@csrf_exempt
+def erase_data_action(request):
+    username = request.GET['unique_username']
 
-
+    user = User.objects.get(username=username)
+    if not user:
+        return JsonResponse(status=500, data={'error': 'User does not exist'}, safe=False)
+    user.delete()
+    return JsonResponse(data={'message': 'User deleted'}, safe=False)
 
 
 
