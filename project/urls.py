@@ -29,4 +29,5 @@ urlpatterns = [
     path('get_news', views.news_action, name='get_news'),
     path('erase_data', views.erase_data_action, name='erase_data'),
     path('add_partner', views.add_partner_action, name='add_partner'),
+    path('appreciate', views.appreciate_action, name='appreciate'),
 ]

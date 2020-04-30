@@ -339,4 +339,31 @@ def add_partner_action(request):
 
     return JsonResponse(data={'message': 'You are now connected!'}, safe=False)
 
+@csrf_exempt
+def appreciate_action(request):
+    username = request.GET['unique_username']
+
+    user = User.objects.get(username=username)
+    if not user:
+        return JsonResponse(status=500, data={'error': 'User does not exist'}, safe=False)
+
+    action = request.GET('action')
+    content = request.GET('content')
+    if not user.partner_name:
+        new_news = News(action=action,
+                        content=content,
+                        created_at=timezone.now(),
+                        created_by=user,
+                        )
+        new_news.save()
+    else:
+        new_news = News(action=action,
+                        content=content,
+                        created_at=timezone.now(),
+                        created_by=user,
+                        shared_with=User.objects.get(username=user.partner_name),
+                        )
+        new_news.save()
+    return JsonResponse({'success': 'True', 'message': 'Appreciation saved successfully.'}, safe=False)
+
 
