@@ -347,8 +347,8 @@ def appreciate_action(request):
     if not user:
         return JsonResponse(status=500, data={'error': 'User does not exist'}, safe=False)
 
-    action = request.GET('action')
-    content = request.GET('content')
+    action = request.GET['action']
+    content = request.GET['content']
     if not user.partner_name:
         new_news = News(action=action,
                         content=content,
