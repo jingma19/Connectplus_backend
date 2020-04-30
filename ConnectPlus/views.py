@@ -324,6 +324,19 @@ def erase_data_action(request):
     user.delete()
     return JsonResponse(data={'message': 'User deleted'}, safe=False)
 
+@csrf_exempt
+def add_partner_action(request):
+    username = request.GET['unique_username']
+    user = User.objects.get(username=username)
+    if not user:
+        return JsonResponse(data={'message': 'User does not exist'}, safe=False)
+    partnername = request.GET['partner_name']
+    partner = User.objects.get(username=partnername)
+    if not partner:
+        return JsonResponse(data={'message': 'Id does not exist, please check with your partner.'}, safe=False)
+    user.partner_name = partner.username
+    partner.partner_name = user.username
 
+    return JsonResponse(data={'message': 'You are now connected!'}, safe=False)
 
 
